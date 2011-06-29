@@ -5,7 +5,7 @@ module ActiveAdmin
     extend ActiveSupport::Concern
 
     included do
-      self.class_inheritable_accessor :action_items
+      self.class_attribute :action_items
       self.action_items = []
     end
 

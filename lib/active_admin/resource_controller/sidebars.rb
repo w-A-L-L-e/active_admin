@@ -5,7 +5,7 @@ module ActiveAdmin
       extend ActiveSupport::Concern
 
       included do
-        self.class_inheritable_accessor :sidebar_sections
+        self.class_attribute :sidebar_sections
         self.sidebar_sections = []
       end
 
