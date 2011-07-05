@@ -9,7 +9,6 @@ require 'rails/version'
 module ActiveAdmin
 
   autoload :VERSION,                  'active_admin/version'
-  autoload :ActionItems,              'active_admin/action_items'
   autoload :Application,              'active_admin/application'
   autoload :AssetRegistration,        'active_admin/asset_registration'
   autoload :Breadcrumbs,              'active_admin/breadcrumbs'
@@ -32,7 +31,7 @@ module ActiveAdmin
   autoload :ResourceController,       'active_admin/resource_controller'
   autoload :Renderer,                 'active_admin/renderer'
   autoload :Scope,                    'active_admin/scope'
-  autoload :Sidebar,                  'active_admin/sidebar'
+  autoload :SidebarSection,           'active_admin/sidebar_section'
   autoload :TableBuilder,             'active_admin/table_builder'
   autoload :ViewFactory,              'active_admin/view_factory'
   autoload :ViewHelpers,              'active_admin/view_helpers'

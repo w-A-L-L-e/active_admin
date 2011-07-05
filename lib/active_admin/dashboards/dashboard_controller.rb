@@ -2,11 +2,7 @@ module ActiveAdmin
   module Dashboards
     class DashboardController < ResourceController
 
-      before_filter :skip_sidebar!
-
       actions :index
-
-      clear_action_items!
 
       def index
         @dashboard_sections = find_sections

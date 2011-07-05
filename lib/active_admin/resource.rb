@@ -1,6 +1,8 @@
-require 'active_admin/resource/naming'
+require 'active_admin/resource/action_items'
 require 'active_admin/resource/menu'
+require 'active_admin/resource/naming'
 require 'active_admin/resource/scopes'
+require 'active_admin/resource/sidebars'
 
 module ActiveAdmin
 
@@ -57,11 +59,15 @@ module ActiveAdmin
       @sort_order = @options[:sort_order]
       @page_configs = {}
       @member_actions, @collection_actions = [], []
+      super
     end
 
-    include Naming
+    include ActionItems
     include Menu
+    include Naming
     include Scopes
+    include Sidebars
+
 
     def resource_table_name
       resource.quoted_table_name
