@@ -1,9 +1,8 @@
 require 'spec_helper'
 
-describe Arbre::HTML do
-  include Arbre::HTML
+describe Arbre do
 
-  let(:assigns){ {} }
+  setup_arbre_context!
 
   it "should render a single element" do
     content = span("Hello World")
