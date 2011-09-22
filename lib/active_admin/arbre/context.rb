@@ -7,10 +7,10 @@ module Arbre
       super - 1
     end
 
-    def length
-      cached_html.length
+    def bytesize
+      cached_html.bytesize
     end
-    alias :bytesize :length
+    alias :length :bytesize
 
     def respond_to?(method)
       super || cached_html.respond_to?(method)
@@ -32,7 +32,13 @@ module Arbre
     # Caches the rendered HTML so that we don't re-render just to
     # get the content lenght or to delegate a method to the HTML
     def cached_html
-      @cached_html ||= to_html
+      if defined?(@cached_html)
+        @cached_html
+      else
+        html = to_html
+        @cached_html = html if html.length > 0
+        html
+      end
     end
 
   end
