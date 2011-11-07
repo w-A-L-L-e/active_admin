@@ -23,6 +23,9 @@ module ActiveAdmin
     
     # Set the site title link href (defaults to AA dashboard)
     setting :site_title_link, ""
+    
+    # Set the site title image displayed in the main layout (has precendence over :site_title)
+    setting :site_title_image, ""
 
     # Load paths for admin configurations. Add folders to this load path
     # to load up other resources for administration. External gems can
@@ -208,7 +211,7 @@ module ActiveAdmin
     end
 
     def attach_reloader
-      ActiveAdmin::Reloader.new(Rails.version).attach!
+      ActiveAdmin::Reloader.new(self, Rails.version).attach!
     end
 
 

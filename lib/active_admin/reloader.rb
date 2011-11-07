@@ -6,17 +6,20 @@ module ActiveAdmin
     # @param [String] rails_version
     #   The version of Rails we're using. We use this to switch between
     #   the correcr Rails reloader class.
-    def initialize(rails_version)
+    def initialize(app, rails_version)
+      @app = app
       @rails_version = rails_version.to_s
-      @@mtimes = Dir["#{Rails.root}/app/admin/*"].map{|f| File.mtime(f) }.flatten.max
     end
 
     # Attach to Rails and perform the reload on each request.
     def attach!
-      reloader_class.to_prepare do
-        return unless ActiveAdmin::Reloader.need_reload?
+      file_update_checker = ActiveSupport::FileUpdateChecker.new(@app.load_paths) do
         ActiveAdmin.application.unload!
         Rails.application.reload_routes!
+      end
+
+      reloader_class.to_prepare do
+        file_update_checker.execute_if_updated
       end
     end
 
@@ -25,17 +28,6 @@ module ActiveAdmin
         ActionDispatch::Reloader
       else
         ActionDispatch::Callbacks
-      end
-    end
-
-    def self.need_reload?
-      changed_at = Dir["#{Rails.root}/app/admin/*"].map{|f| File.mtime(f) }.flatten.max
-      if @@mtimes < changed_at
-        @@mtimes = changed_at
-        STDERR.puts ">>>>>>>>>>>>>>>>>>>   RELOAD!"
-        true
-      else
-        false
       end
     end
 

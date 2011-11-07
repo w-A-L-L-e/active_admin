@@ -8,7 +8,7 @@ module ActiveAdmin
 
       def build(scopes)
         scopes.each do |scope|
-          build_scope(scope)
+          build_scope(scope) if call_method_or_proc_on(self, scope.display_if_block)
         end
       end
 
@@ -17,7 +17,7 @@ module ActiveAdmin
       def build_scope(scope)
         span :class => classes_for_scope(scope) do
           begin
-            scope_name = I18n.t!("active_admin.scopes.#{scope.scope_method}")
+            scope_name = I18n.t!("active_admin.scopes.#{scope.id}")
           rescue I18n::MissingTranslationData
             scope_name = scope.name
           end
