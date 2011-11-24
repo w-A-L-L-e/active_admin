@@ -45,6 +45,52 @@ describe ActiveAdmin::ResourceController do
     end
   end
 
+  describe "authenticating the user" do
+    let(:controller){ Admin::PostsController.new }
+
+    it "should do nothing when no authentication_method set" do
+      namespace = controller.class.active_admin_config.namespace
+      namespace.should_receive(:authentication_method).once.and_return(nil)
+
+      controller.send(:authenticate_active_admin_user)
+    end
+
+    it "should call the authentication_method when set" do
+      namespace = controller.class.active_admin_config.namespace
+
+      namespace.should_receive(:authentication_method).twice.
+        and_return(:authenticate_admin_user!)
+
+      controller.should_receive(:authenticate_admin_user!).and_return(true)
+
+      controller.send(:authenticate_active_admin_user)
+    end
+
+  end
+
+  describe "retrieving the current user" do
+    let(:controller){ Admin::PostsController.new }
+
+    it "should return nil when no current_user_method set" do
+      namespace = controller.class.active_admin_config.namespace
+      namespace.should_receive(:current_user_method).once.and_return(nil)
+
+      controller.send(:current_active_admin_user).should == nil
+    end
+
+    it "should call the current_user_method when set" do
+      user = mock
+      namespace = controller.class.active_admin_config.namespace
+
+      namespace.should_receive(:current_user_method).twice.
+        and_return(:current_admin_user)
+
+      controller.should_receive(:current_admin_user).and_return(user)
+
+      controller.send(:current_active_admin_user).should == user
+    end
+  end
+
   describe "callbacks" do
     let(:application){ ::ActiveAdmin::Application.new }
     let(:namespace){ ActiveAdmin::Namespace.new(application, :admin) }
