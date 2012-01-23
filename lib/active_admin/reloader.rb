@@ -1,5 +1,13 @@
 module ActiveAdmin
 
+  class FileUpdateChecker < ::ActiveSupport::FileUpdateChecker
+
+    # Over-ride the default #updated_at to support the deletion of files
+    def updated_at
+      paths.map { |path| File.mtime(path) rescue Time.now }.max
+    end
+
+  end
 
   # Deals with reloading Active Admin on each request in 
   # development and once in production.
@@ -16,7 +24,7 @@ module ActiveAdmin
       @rails_app = rails_app
       @active_admin_app = active_admin_app
       @rails_version = rails_version.to_s
-      @file_update_checker = ActiveSupport::FileUpdateChecker.new(watched_paths) do
+      @file_update_checker = FileUpdateChecker.new(watched_paths) do
         reload!
       end
     end
@@ -24,7 +32,8 @@ module ActiveAdmin
     def reload!
       active_admin_app.unload!
       rails_app.reload_routes!
-      file_update_checker.instance_variable_set(:@files, watched_paths)
+      file_update_checker.paths.clear
+      watched_paths.each{|path| file_update_checker.paths << path }
     end
 
     # Attach to Rails and perform the reload on each request.
@@ -35,7 +44,6 @@ module ActiveAdmin
       reloader_class.to_prepare do
         checker.execute_if_updated
       end
-      Rails.application.reloaders << checker
     end
 
     def watched_paths
@@ -45,7 +53,7 @@ module ActiveAdmin
     end
 
     def reloader_class
-      if @rails_version[0..2] =~ /3\.[^0]/
+      if @rails_version[0..2] == '3.1'
         ActionDispatch::Reloader
       else
         ActionDispatch::Callbacks
