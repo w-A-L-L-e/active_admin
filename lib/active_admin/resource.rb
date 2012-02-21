@@ -2,6 +2,7 @@ require 'active_admin/resource/action_items'
 require 'active_admin/resource/controllers'
 require 'active_admin/resource/menu'
 require 'active_admin/resource/page_presenters'
+require 'active_admin/resource/pagination'
 require 'active_admin/resource/naming'
 require 'active_admin/resource/scopes'
 require 'active_admin/resource/sidebars'
@@ -59,6 +60,7 @@ module ActiveAdmin
     include Base
     include Controllers
     include PagePresenters
+    include Pagination
     include ActionItems
     include Naming
     include Scopes
@@ -73,6 +75,10 @@ module ActiveAdmin
 
     def resource_table_name
       resource_class.quoted_table_name
+    end
+
+    def resource_quoted_column_name(column)
+      resource_class.connection.quote_column_name(column)
     end
 
     # Returns the named route for an instance of this resource
