@@ -16,6 +16,14 @@ module Arbre
       super || cached_html.respond_to?(method)
     end
 
+    def kind_of?(klass)
+      if klass == String
+        return true
+      else
+        super
+      end
+    end
+
     # Webservers treat Arbre::Context as a string. We override
     # method_missing to delegate to the string representation
     # of the html.
