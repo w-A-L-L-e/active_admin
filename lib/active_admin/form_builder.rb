@@ -24,15 +24,27 @@ module ActiveAdmin
       form_buffers.last << content.html_safe
     end
 
-    # The buttons method always needs to be wrapped in a new buffer
-    def buttons(*args, &block)
+    # The actions method always needs to be wrapped in a new buffer
+    def actions(*args, &block)
       content = with_new_form_buffer do
         block_given? ? super : super { commit_button_with_cancel_link }
       end
       form_buffers.last << content.html_safe
     end
 
+    # The buttons method always needs to be wrapped in a new buffer
+    def buttons(*args, &block)
+      ::ActiveSupport::Deprecation.warn("ActiveAdmin f.buttons is deprecated in favour of f.actions.")
+      actions(*args, &block)
+    end
+
+    def action(method, options = {})
+      content = with_new_form_buffer{ super }
+      form_buffers.last << content.html_safe
+    end
+
     def commit_button(*args)
+      ::ActiveSupport::Deprecation.warn("ActiveAdmin f.commit_button is deprecated in favour of f.actions(:submit) ")
       content = with_new_form_buffer{ super }
       form_buffers.last << content.html_safe
     end
@@ -44,7 +56,7 @@ module ActiveAdmin
     end
 
     def commit_button_with_cancel_link
-      content = commit_button
+      content = action(:submit)
       content << cancel_link
     end
 

@@ -43,9 +43,9 @@ describe ActiveAdmin::FormBuilder do
           f.input :title
           f.input :body
         end
-        f.buttons do
-          f.commit_button "Submit Me"
-          f.commit_button "Another Button"
+        f.actions do
+          f.action :submit, :label => "Submit Me"
+          f.action :submit, :label => "Another Button"
         end
       end
     end
@@ -83,7 +83,7 @@ describe ActiveAdmin::FormBuilder do
     let :body do
       build_form :html => { :multipart => true } do |f|
         f.inputs :title
-        f.buttons
+        f.actions
       end
     end
     it "should pass the options on to the form" do
@@ -97,22 +97,22 @@ describe ActiveAdmin::FormBuilder do
         f.inputs do
           f.input :title
         end
-        f.buttons
+        f.actions
       end
       body.scan(/id=\"post_title\"/).size.should == 1
     end
     it "should generate one button and a cancel link" do
       body = build_form do |f|
-        f.buttons
+        f.actions
       end
       body.scan(/type=\"submit\"/).size.should == 1
       body.scan(/class=\"cancel\"/).size.should == 1
     end
     it "should generate multiple buttons" do
       body = build_form do |f|
-        f.buttons do
-          f.commit_button "Create & Continue"
-          f.commit_button "Create & Edit"
+        f.actions do
+          f.action :submit, :label => "Create & Continue"
+          f.action :submit, :label => "Create & Edit"
         end
       end
       body.scan(/type=\"submit\"/).size.should == 2
